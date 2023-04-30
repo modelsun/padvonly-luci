@@ -2,15 +2,12 @@
 
 zero_enable="$(uci get zerotier.sample_config.enabled)"
 
-[ "${zero_enable}" -eq "1" ] || exit 1
+[ "${zero_enable}" -ne "1" ] && exit 0
 
-count=0
 [ -f "/tmp/zero.log" ] && {
-	while [ -z "$(ifconfig | grep 'zt' | awk '{print $1}')" ]
+	while [ "$(ifconfig | grep 'zt' | awk '{print $1}')" = "" ]
 	do
-		sleep 2
-		let count++
-		[ "${count}" -lt 5 ] || exit 19
+		sleep 1
 	done
 }
 
