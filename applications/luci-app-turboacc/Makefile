@@ -1,7 +1,7 @@
 # SPDX-Identifier-License: GPL-3.0-only
 #
-# Copyright (C) 2018 Lean <coolsnowwolf@gmail.com>
-# Copyright (C) 2019-2021 ImmortalWrt.org
+# Copyright (C) 2022 Lean <coolsnowwolf@gmail.com>
+# Copyright (C) 2019-2022 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
 
@@ -9,46 +9,66 @@ PKG_NAME:=luci-app-turboacc
 PKG_RELEASE:=$(COMMITCOUNT)
 
 PKG_LICENSE:=GPL-3.0-only
-PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
+PKG_MAINTAINER:=Lean <coolsnowwolf@gmail.com>
+
+PKG_CONFIG_DEPENDS:= \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_BBR_CCA \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_DNSFORWARDER \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_DNSPROXY \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_CM \
+	CONFIG_PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_DRV
 
 LUCI_TITLE:=LuCI support for Flow Offload / Shortcut-FE
-LUCI_DEPENDS:=+pdnsd-alt \
-	+PACKAGE_TURBOACC_INCLUDE_BBR_CCA:kmod-tcp-bbr \
-	+PACKAGE_TURBOACC_INCLUDE_DNSFORWARDER:dnsforwarder \
-	+PACKAGE_TURBOACC_INCLUDE_DNSPROXY:dnsproxy \
-	+PACKAGE_TURBOACC_INCLUDE_OFFLOADING:kmod-ipt-offload \
-	+PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE:kmod-fast-classifier
+LUCI_DEPENDS:=+PACKAGE_$(PKG_NAME)_INCLUDE_PDNSD:pdnsd-alt \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_BBR_CCA:kmod-tcp-bbr \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_DNSFORWARDER:dnsforwarder \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_DNSPROXY:dnsproxy \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING:kmod-ipt-offload \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE:kmod-fast-classifier \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_CM:kmod-shortcut-fe-cm \
+	+PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_DRV:kmod-shortcut-fe-drv
 LUCI_PKGARCH:=all
 
-define Package/luci-app-turboacc/config
-config PACKAGE_TURBOACC_INCLUDE_OFFLOADING
+define Package/$(PKG_NAME)/config
+config PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING
 	bool "Include Flow Offload"
-	depends on !LINUX_4_9 && PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE=n
+	default y if !(TARGET_x86||TARGET_ipq60xx||TARGET_ipq806x||TARGET_ipq807x)
+
+config PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE
+	bool "Include Shortcut-FE"
+	depends on PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING=n
+	default n
+
+config PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_CM
+	bool "Include Shortcut-FE CM"
+	depends on PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING=n
+	default y if !(TARGET_ipq60xx||TARGET_ipq806x||TARGET_ipq807x)
+
+config PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_DRV
+	bool "Include Shortcut-FE ECM"
+	depends on PACKAGE_$(PKG_NAME)_INCLUDE_OFFLOADING=n
+	depends on PACKAGE_$(PKG_NAME)_INCLUDE_SHORTCUT_FE_CM=n
+	depends on (TARGET_ipq60xx||TARGET_ipq806x||TARGET_ipq807x)
 	default y
 
-config PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE
-	bool "Include Shortcut-FE"
-	default y if LINUX_4_9
-
-config PACKAGE_TURBOACC_INCLUDE_BBR_CCA
+config PACKAGE_$(PKG_NAME)_INCLUDE_BBR_CCA
 	bool "Include BBR CCA"
 	default y
 
-config PACKAGE_TURBOACC_INCLUDE_DNSFORWARDER
+config PACKAGE_$(PKG_NAME)_INCLUDE_PDNSD
+	bool "Include Pdnsd"
+	default y
+
+config PACKAGE_$(PKG_NAME)_INCLUDE_DNSFORWARDER
 	bool "Include DNSForwarder"
 	default n
 
-config PACKAGE_TURBOACC_INCLUDE_DNSPROXY
+config PACKAGE_$(PKG_NAME)_INCLUDE_DNSPROXY
 	bool "Include DNSProxy"
 	default n
 endef
-
-PKG_CONFIG_DEPENDS:= \
-	CONFIG_PACKAGE_TURBOACC_INCLUDE_BBR_CCA \
-	CONFIG_PACKAGE_TURBOACC_INCLUDE_DNSFORWARDER \
-	CONFIG_PACKAGE_TURBOACC_INCLUDE_DNSPROXY \
-	CONFIG_PACKAGE_TURBOACC_INCLUDE_OFFLOADING \
-	CONFIG_PACKAGE_TURBOACC_INCLUDE_SHORTCUT_FE
 
 include ../../luci.mk
 
