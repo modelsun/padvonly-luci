@@ -13,7 +13,7 @@ restart_utils="true"
 inital_conf(){
 	config_load "turboacc"
 	config_get "sw_flow" "config" "sw_flow" "0"
-	config_get "hw_flow" "config" "hw_flow" "0"
+	config_get "hw_flow" "config" "hw_flow" "1"
 	config_get "sfe_flow" "config" "sfe_flow" "0"
 	config_get "bbr_cca" "config" "bbr_cca" "0"
 	config_get "fullcone_nat" "config" "fullcone_nat" "0"
@@ -248,7 +248,7 @@ start(){
 		lsmod | grep -q mtkhnat || modprobe mtkhnat
 	}
 
-	[ "${sw_flow}" -ne "1" ] && [ "${sfe_flow}" -eq "1" ] && {
+	[ "${sw_flow}" -ne "1" ] && [ "${sfe_flow}" -eq "1" ] && [ "${hw_flow}" -eq "0" ]  && {
 		load_sfe
 	}
 
@@ -327,7 +327,7 @@ check_status(){
 		if [ "$(cat "/sys/module/xt_FLOWOFFLOAD/refcnt" 2>"/dev/null" || echo 0)" -ne "0" ]; then
 			echo -n "Flow Offloading"
 			exit 0
-		elif [ "$(cat "/sys/module/xt_FLOWOFFLOAD/refcnt" 2>"/dev/null")" -eq "0" ] && \
+		elif [ "$(cat "/sys/module/xt_FLOWOFFLOAD/refcnt" 2>"/dev/null")" -eq "0" ] || \
 		    [ -e /sys/kernel/debug/hnat/hnat_version ]; then
 			echo -n "MediaTek HWNAT"
 			exit 0
