@@ -112,4 +112,16 @@ tms = s:option(Value, "timemachine_maxsize", translate("Time-machine size in GB"
 tms.rmempty = true
 tms.maxlength = 5
 
+-- save&apply action
+local apply = luci.http.formvalue("cbi.apply")
+if apply then
+    if en == "enable" then
+        -- service samba4 start
+        io.popen("service samba4 start > /dev/null &")
+    elseif en != "enable" then
+	-- service samba4 stop
+        io.popen("service samba4 stop > /dev/null &")
+    end
+end
+
 return m
