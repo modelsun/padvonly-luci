@@ -118,7 +118,7 @@ if apply then
     if en == "enable" then
         -- service samba4 start
         io.popen("service samba4 start > /dev/null &")
-    elseif en != "enable" then
+    elseif en ~= "enable" then
 	-- service samba4 stop
         io.popen("service samba4 stop > /dev/null &")
     end
