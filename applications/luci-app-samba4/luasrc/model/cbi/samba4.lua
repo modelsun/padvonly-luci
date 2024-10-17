@@ -2,7 +2,7 @@
 
 m = Map("samba4", translate("Network Shares"))
 
-s = m:section(TypedSection, "samba", "Samba")
+s = m:section(TypedSection, "samba", "Samba4")
 s.anonymous = true
 
 s:tab("general",  translate("General Settings"))
