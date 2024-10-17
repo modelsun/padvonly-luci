@@ -10,6 +10,7 @@ s:tab("template", translate("Edit Template"))
 
 enable = s:taboption("general",Flag, "enabled", translate("Enable"))
 enable.rmempty = false
+enable.default = "1"
 
 s:taboption("general", Value, "name", translate("Hostname"))
 s:taboption("general", Value, "description", translate("Description"))
