@@ -9,8 +9,6 @@ s:tab("general",  translate("General Settings"))
 s:tab("template", translate("Edit Template"))
 
 en = s:taboption("general",Flag, "enabled", translate("Enable"))
-en.rmempty = false
-en.default = "1"
 
 s:taboption("general", Value, "name", translate("Hostname"))
 s:taboption("general", Value, "description", translate("Description"))
@@ -19,6 +17,7 @@ h = s:taboption("general", Flag, "homes", translate("Share home-directories"),
         translate("Allow system users to reach their home directories via " ..
                 "network shares"))
 h.rmempty = false
+en.rmempty = false
 
 macos = s:taboption("general", Flag, "macos", translate("Enable macOS compatible shares"),
 	translate("Enables Apple's AAPL extension globally and adds macOS compatibility options to all shares."))
