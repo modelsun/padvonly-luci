@@ -8,7 +8,7 @@ s.anonymous = true
 s:tab("general",  translate("General Settings"))
 s:tab("template", translate("Edit Template"))
 
-en = s:taboption("general",Flag, "enable", translate("enable"),translate("开启或关闭Samba4服务"))
+--en = s:taboption("general",Flag, "enable", translate("enable"),translate("开启或关闭Samba4服务"))
 
 s:taboption("general", Value, "name", translate("Hostname"))
 s:taboption("general", Value, "description", translate("Description"))
@@ -17,7 +17,7 @@ h = s:taboption("general", Flag, "homes", translate("Share home-directories"),
         translate("Allow system users to reach their home directories via " ..
                 "network shares"))
 h.rmempty = false
-en.rmempty = false
+--en.rmempty = false
 
 macos = s:taboption("general", Flag, "macos", translate("Enable macOS compatible shares"),
 	translate("Enables Apple's AAPL extension globally and adds macOS compatibility options to all shares."))
@@ -113,15 +113,15 @@ tms.rmempty = true
 tms.maxlength = 5
 
 -- save&apply action
---local apply = luci.http.formvalue("cbi.apply")
---if apply then
+local apply = luci.http.formvalue("cbi.apply")
+if apply then
 --    en.validate=function(self, value)
 --    if value == '1' then
---        io.popen("/etc/init.d/samba4 restart > /dev/null &")
+    io.popen("/etc/init.d/samba4 restart > /dev/null &")
 ---    end
 --    if value == '0' then
 --        io.popen("/etc/init.d/samba4 stop > /dev/null &")
 --    end
 --end
---end
+end
 return m
