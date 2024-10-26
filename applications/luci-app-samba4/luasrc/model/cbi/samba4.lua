@@ -8,7 +8,7 @@ s.anonymous = true
 s:tab("general",  translate("General Settings"))
 s:tab("template", translate("Edit Template"))
 
-en = s:taboption("general",Flag, "enabled", translate("Enable"))
+en = s:taboption("general",Flag, "enable", translate("enable"),translate("开启或关闭Samba4服务"))
 
 s:taboption("general", Value, "name", translate("Hostname"))
 s:taboption("general", Value, "description", translate("Description"))
@@ -115,13 +115,13 @@ tms.maxlength = 5
 -- save&apply action
 local apply = luci.http.formvalue("cbi.apply")
 if apply then
-	en.validate=function(self, value)
-	if value == '1' then
-		io.popen("/etc/init.d/samba4 restart > /dev/null &")
-	end
-	if value == '0' then
-		io.popen("/etc/init.d/samba4 stop > /dev/null &")
-	end
+    en.validate=function(self, value)
+    if value == '1' then
+        io.popen("/etc/init.d/samba4 restart > /dev/null &")
+    end
+    if value == '0' then
+        io.popen("/etc/init.d/samba4 stop > /dev/null &")
+    end
 end
 end
 return m
