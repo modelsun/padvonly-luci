@@ -119,7 +119,7 @@ tms.maxlength = 5
 --    if value == '1' then
 --        io.popen("/etc/init.d/samba4 restart > /dev/null &")
 ---    end
--    if value == '0' then
+--    if value == '0' then
 --        io.popen("/etc/init.d/samba4 stop > /dev/null &")
 --    end
 --end
