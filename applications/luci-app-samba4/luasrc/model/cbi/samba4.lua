@@ -113,15 +113,15 @@ tms.rmempty = true
 tms.maxlength = 5
 
 -- save&apply action
-local apply = luci.http.formvalue("cbi.apply")
-if apply then
-    en.validate=function(self, value)
-    if value == '1' then
-        io.popen("/etc/init.d/samba4 restart > /dev/null &")
-    end
-    if value == '0' then
-        io.popen("/etc/init.d/samba4 stop > /dev/null &")
-    end
-end
-end
+--local apply = luci.http.formvalue("cbi.apply")
+--if apply then
+--    en.validate=function(self, value)
+--    if value == '1' then
+--        io.popen("/etc/init.d/samba4 restart > /dev/null &")
+---    end
+-    if value == '0' then
+--        io.popen("/etc/init.d/samba4 stop > /dev/null &")
+--    end
+--end
+--end
 return m
